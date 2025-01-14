@@ -1,0 +1,42 @@
+def calculate_love_score(name1,name2):
+    name3=(name1+name2).lower()
+    print(name3)
+    length=len(name3)
+    i=0
+    t=0
+    r=0
+    u=0
+    e=0
+    l=0
+    o=0
+    v=0
+    for i in range(length):
+        if name3[i]=='t':
+            t+=1
+        elif name3[i]=='r':
+            r+=1
+        elif name3[i]=='u':
+            u+=1
+        elif name3[i]=='e':
+            e+=1
+        elif name3[i]=='l':
+            l+=1
+        elif name3[i]=='o':
+            o+=1
+        elif name3[i]=='v':
+            v+=1
+    print(f"t occurs {t} times")
+    print(f"r occurs {r} times")
+    print(f"u occurs {u} times")
+    print(f"e occurs {e} times")
+    print(f"Total = {t+r+u+e}")
+    print(f"l occurs {l} times")
+    print(f"o occurs {o} times")
+    print(f"v occurs {v} times")
+    print(f"e occurs {e} times")
+    print(f"Total = {l + o + v + e}")
+    a=t+r+u+e
+    b=l + o + v + e
+    c=str(a)+str(b)
+    print(c)
+calculate_love_score("ram","sita")
