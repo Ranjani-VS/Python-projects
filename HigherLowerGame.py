@@ -8,11 +8,12 @@ def game2():
 print(logo)
 score = 0
 is_game=True
+a = random.choice(data)
+b = random.choice(data)
+if a == b:
+    b = random.choice(data)
 
 while is_game:
-
-    a = random.choice(data)
-    b = random.choice(data)
 
     print(f"Compare_A: {a["name"]}, {a["description"]}, from {a["country"]}")
     print(vs)
@@ -38,5 +39,8 @@ while is_game:
         else:
             print(f"Sorry, that's wrong. Final score:{score}")
             is_game = False
-
+    a = b
+    b = random.choice(data)
+    if a==b:
+        b = random.choice(data)
 
