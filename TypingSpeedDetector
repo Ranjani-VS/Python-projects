@@ -1,0 +1,72 @@
+import time
+import requests
+from tkinter import *
+
+# Initialize the main window
+window = Tk()
+window.title("Typing Speed Test")
+window.geometry("600x300")
+window.config(padx=10, pady=10)
+
+x = None
+sentence = ""  # Store fetched sentence
+
+# Labels
+label = Label(window, text="Enter the below text:", font=("Arial", 12))
+label.pack()
+
+text_label = Label(window, text="Press 'Start' to fetch a random sentence", font=("Arial", 12), wraplength=500)
+text_label.pack(pady=10)
+
+entry = Entry(window, width=50)
+entry.pack(pady=10)
+
+# Function to start the test
+def start():
+    global x, sentence
+    try:
+        response = requests.get("https://quotes-api-self.vercel.app/quote")
+        if response.status_code == 200:
+            sentence = response.json()["quote"]  # Extract quote
+        else:
+            sentence = "Error fetching text. Try again."
+    except:
+        sentence = "No internet connection."
+
+    text_label.config(text=sentence)  # Display text
+    entry.delete(0, END)  # Clear previous input
+    x = time.time()  # Start timer
+
+# Start button
+start_button = Button(window, text="Start", command=start)
+start_button.pack(pady=5)
+
+# Function to end the test
+def end():
+    global x, sentence
+    if x is None:
+        label.config(text="Press Start first!")
+        return
+
+    at = time.time()
+    z = at - x  # Calculate time taken
+    text = entry.get()
+
+    words = len(text.split())
+    speed = (words / z) * 60 if words > 0 and z > 0 else 0  # Prevent division by zero
+
+    correct_chars = sum(1 for a, b in zip(sentence, text) if a == b)
+    accuracy = (correct_chars / len(sentence)) * 100 if len(sentence) > 0 else 0
+
+    result_label.config(text=f"Time Taken: {z:.2f} seconds\nTyping Speed: {speed:.2f} WPM\nAccuracy: {accuracy:.2f}%")
+
+# End button
+end_button = Button(window, text="Finish", command=end)
+end_button.pack(pady=5)
+
+# Result display
+result_label = Label(window, text="", font=("Arial", 12))
+result_label.pack(pady=10)
+
+# Run the Tkinter loop
+window.mainloop()
