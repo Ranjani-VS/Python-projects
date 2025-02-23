@@ -1,0 +1,57 @@
+import time
+from tkinter import *
+
+# Create the main window
+window = Tk()
+window.title("Dangerous Writing App")
+window.geometry("600x100")
+
+# Add a label for instructions
+label = Label(window, text="Enter the text below:", font=("Arial", 12))
+label.pack()
+
+# Create the entry widget
+entry = Entry(width=50)
+entry.pack()
+
+# Global variable to store the start time and last keypress time
+start_time = None
+last_keypress_time = None
+
+# Function to start the timer
+def start():
+    global start_time, last_keypress_time
+    start_time = time.time()  # Record the time when the user starts typing
+    last_keypress_time = time.time()  # Initialize last keypress time
+    entry.delete(0, END)  # Clear the entry widget
+    entry.config(state=NORMAL)  # Enable the entry widget so the user can type again
+    label.config(text="Start typing...")  # Update the label to prompt the user
+    check_inactivity()  # Start checking for inactivity
+
+# Function to track inactivity
+def check_inactivity():
+    global last_keypress_time
+
+    # If no keypress in the last 5 seconds, delete the text and disable the entry
+    if time.time() - last_keypress_time > 5:
+        entry.delete(0, END)  # Clear the text field
+        entry.config(state=DISABLED)  # Disable the entry widget (make it inactive)
+        label.config(text="You took too long! Text was deleted. Press start again to restart.")  # Update the label
+    else:
+        # Keep checking every 100ms
+        window.after(100, check_inactivity)
+
+# Function to update the last keypress time
+def on_keypress(event):
+    global last_keypress_time
+    last_keypress_time = time.time()  # Update the last keypress time
+
+# Bind the <KeyPress> event to track the typing progress
+entry.bind("<KeyPress>", on_keypress)
+
+# Start button to begin the process
+start_button = Button(window, text="Start", command=start)
+start_button.pack()
+
+# Run the main loop
+window.mainloop()
