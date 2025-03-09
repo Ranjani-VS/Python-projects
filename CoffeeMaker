@@ -1,0 +1,102 @@
+def tota():
+    print("Please insert coins.")
+    quarter = int(input("How many quarters?")) * 0.25
+    dime = int(input("How many dimes?")) * 0.10
+    nickel = int(input("How many nickels?")) * 0.05
+    penny = int(input("How many pennies?")) * 0.01
+    total = quarter + dime + nickel + penny
+    return total
+water=300
+milk=200
+coffee=100
+money=50
+
+machine_on=True
+while machine_on:
+    user=input("What would you like? (espresso/latte/cappuccino): ")
+
+    change=0
+    espresso=1.50
+    latte=2.50
+    cappuccino=3.00
+
+
+    if user=="espresso":
+        if (water>50):
+            if (coffee>18):
+                if (money>1.50):
+                    z = tota()
+                    if (z > espresso):
+                        change=round((z-espresso),2)
+                        money=money-change
+                        money = money + espresso
+                        water=water-50
+                        coffee=coffee-18
+                        print(f"Here is ${change} in change.")
+                        print("Here is your espresso🍵 Enjoy!")
+                    else:
+                        print("Sorry that's not enough for the drink. Money refunded.")
+                else:
+                    print("Sorry there is not enough money.")
+            else:
+                print("Sorry there is not enough coffee.")
+        else:
+            print("Sorry there is not enough water.")
+    elif user=="latte":
+        if water>200:
+            if milk > 150:
+                if coffee > 24:
+                    if money > 2.50:
+                        z = tota()
+                        if z > latte:
+                            change=round((z-latte),2)
+                            money = money - change
+                            money = money + latte
+                            water=water-200
+                            milk=milk-150
+                            coffee=coffee-24
+                            print(f"Here is ${change} in change.")
+                            print("Here is your latte🍵 Enjoy! ")
+                        else:
+                            print("Sorry that's not enough for the drink. Money refunded.")
+                    else:
+                        print("Sorry there is not enough money.")
+                else:
+                    print("Sorry there is not enough coffee.")
+            else:
+                print("Sorry there is not enough milk.")
+        else:
+            print("Sorry there is not enough water.")
+
+    elif user=="cappuccino":
+        if water>250:
+            if milk>100:
+                if coffee>24:
+                    if money>3.00:
+                        z = tota()
+                        if z > cappuccino:
+                            change=round((z-cappuccino),2)
+                            money = money - change
+                            money=money + cappuccino
+                            water=water-250
+                            milk=milk-100
+                            coffee=coffee-24
+                            print(f"Here is ${change} in change.")
+                            print("Here is your cappuccino🍵 Enjoy! ")
+                        else:
+                            print("Sorry that's not enough for the drink. Money refunded.")
+                    else:
+                        print("Sorry there is not enough money.")
+                else:
+                    print("Sorry there is not enough coffee.")
+            else:
+                print("Sorry there is not enough milk.")
+        else:
+            print("Sorry there is not enough water.")
+    elif user=="report":
+        print(f"Water:{water}ml")
+        print(f"Milk:{milk}ml")
+        print(f"Coffee:{water}g")
+        print(f"Money:${money}")
+    elif user=="off":
+        machine_on=False
