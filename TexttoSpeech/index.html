@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text-to-Speech File Reader</title>
+    <style>
+        /* Basic Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Header Styling */
+        header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+        }
+
+        /* Main content */
+        main {
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        /* Footer Styling */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        /* Buttons Styling */
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        #fileContent {
+            white-space: pre-wrap;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <h1>Text-to-Speech File Reader</h1>
+        <p>Upload a document, and we will read it aloud for you!</p>
+    </header>
+
+    <!-- Main Content Section -->
+    <main>
+        <h2>Upload a File and Start Reading</h2>
+
+        <input type="file" id="fileInput" accept=".txt,.pdf,.docx">
+        <button onclick="uploadFile()">Upload and Read</button>
+
+        <div id="fileContent"></div>
+
+        <button onclick="pauseReading()">Pause</button>
+        <button onclick="restartReading()">Restart</button>
+        <button onclick="stopReading()">Stop</button>
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2025 Text-to-Speech Reader | All Rights Reserved</p>
+    </footer>
+
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=Q28uHTd4"></script>
+    <script>
+        let fileText = '';
+        let currentIndex = 0;
+        let isReading = false;
+
+        // Upload file and fetch the text
+        function uploadFile() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.text) {
+                    fileText = data.text;
+                    document.getElementById('fileContent').textContent = fileText;
+                    startReading();
+                } else {
+                    alert(data.error);
+                }
+            })
+            .catch(error => alert("Error uploading file: " + error));
+        }
+
+        // Start reading the text
+        function startReading() {
+            if (fileText.length > 0) {
+                isReading = true;
+                responsiveVoice.speak(fileText.substring(currentIndex), "UK English Male", {
+                    onend: function() {
+                        isReading = false;
+                        currentIndex = 0;
+                    }
+                });
+            }
+        }
+
+        // Pause the reading
+        function pauseReading() {
+            if (isReading) {
+                responsiveVoice.cancel();
+                isReading = false;
+            }
+        }
+
+        // Restart reading from the beginning
+        function restartReading() {
+            if (fileText.length > 0) {
+                currentIndex = 0;
+                startReading();
+            }
+        }
+
+        // Stop the reading completely
+        function stopReading() {
+            if (isReading) {
+                responsiveVoice.cancel();
+                isReading = false;
+                currentIndex = 0;
+            }
+        }
+    </script>
+</body>
+</html>
