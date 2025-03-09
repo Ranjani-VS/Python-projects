@@ -1,0 +1,45 @@
+import pandas as pd
+from bs4 import BeautifulSoup
+import requests
+url="https://www.fnp.com/plants-lp?promo=desk_hp_row7_pos_va"
+response=requests.get(url)
+web_page=response.text
+# print(web_page)
+plant_name=[]
+plant_cost=[]
+plant_review=[]
+i=0
+j=0
+k=0
+soup=BeautifulSoup(web_page,"html.parser")
+tag=soup.find_all(name="div",class_="MuiGrid-root jss18 MuiGrid-container MuiGrid-spacing-xs-1")
+for cake in tag:
+    c1=cake.find_all(name="div",class_="product-card_product-title__32LFp")
+    c2=cake.find_all(name="span",class_="product-card_product-price-info__17tj7")
+    c3 = cake.find_all(name="span", class_="product-card_rating-sec__34VZH")
+    c4=cake.find_all(name="div", class_="product-card_product-info__2G6yk")
+    for name in c1:
+        plant_name.append(name.text.strip())
+    for cost in c2:
+        cost_text = cost.text.strip()
+        # Replacing the \xa0 with an empty string (remove it) or a space
+        cost_text = cost_text.replace("\xa0", "")  # or use "cost_text.replace('\xa0', ' ')" for a space
+        plant_cost.append(cost_text)
+
+
+    for data in c4:
+        se=data.find_all(name="span", class_="product-card_rating-sec__34VZH")
+        if se:
+            for t in se:
+                plant_review.append(t.text.strip())
+
+        else:
+            print("no review")
+            plant_review.append("no review")
+
+dict={"Plant_Name":plant_name,"Plant_Cost":plant_cost,"Plant_Review":plant_review}
+print(dict)
+df=pd.DataFrame(dict)
+df.to_csv("ferns_and_petals.csv")
+
+
